@@ -18,9 +18,11 @@ RUN apt-get update && apt-get -y -q install python-software-properties software-
 
 USER postgres
 
-RUN /etc/init.d/postgresql start &&\
-    psql --command "CREATE USER pguser WITH SUPERUSER PASSWORD 'pguser';" &&\
+RUN /etc/init.d/postgresql start \
+	&& psql --command "CREATE USER pguser WITH SUPERUSER PASSWORD 'pguser';" &&\
     createdb -O pguser pgdb
+
+USER root
 
 # Adjust PostgreSQL configuration so that remote connections to the
 # database are possible.
@@ -36,6 +38,8 @@ RUN mkdir -p /var/run/postgresql && chown -R postgres /var/run/postgresql
 
 # Add VOLUMEs to allow backup of config, logs and databases
 VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
+
+USER postgres
 
 # Set the default command to run when starting the container
 CMD ["/usr/lib/postgresql/9.3/bin/postgres", "-D", "/var/lib/postgresql/9.3/main", "-c", "config_file=/etc/postgresql/9.3/main/postgresql.conf"]
