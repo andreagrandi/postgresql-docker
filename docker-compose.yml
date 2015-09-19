@@ -2,7 +2,7 @@ dbdata:
   image: andreagrandi/postgresql:9.3
   volumes:
     - /var/lib/postgresql
-  command: true
+  command: /bin/true
 
 db:
   image: andreagrandi/postgresql:9.3
